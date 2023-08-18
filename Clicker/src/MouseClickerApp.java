@@ -38,9 +38,6 @@ public class MouseClickerApp {
         JButton stopButton = new JButton("Stop Clicking");
         stopButton.setEnabled(false);
 
-        JProgressBar progressBar = new JProgressBar(0, 100); // Create a progress bar
-        progressBar.setStringPainted(true); // Show percentage text on the bar
-
         panel.add(xLabel);
         panel.add(xTextField);
         panel.add(yLabel);
@@ -51,7 +48,6 @@ public class MouseClickerApp {
         panel.add(clickCountTextField);
         panel.add(startButton);
         panel.add(stopButton);
-        panel.add(progressBar); // Add the progress bar
 
         frame.add(panel);
 
@@ -75,7 +71,7 @@ public class MouseClickerApp {
                     clickInterval = Integer.parseInt(intervalText);
                     int clickCount = Integer.parseInt(clickCountText);
 
-                    RobotClicker robotClicker = new RobotClicker(xCoord, yCoord, clickCount, progressBar);
+                    RobotClicker robotClicker = new RobotClicker(xCoord, yCoord, clickCount);
                     clickerThread = new Thread(robotClicker);
                     clickerThread.start();
                 }
@@ -103,31 +99,23 @@ public class MouseClickerApp {
         private int x;
         private int y;
         private int clickCount;
-        private JProgressBar progressBar;
 
-        public RobotClicker(int x, int y, int clickCount, JProgressBar progressBar) {
+        public RobotClicker(int x, int y, int clickCount) {
             this.x = x;
             this.y = y;
             this.clickCount = clickCount;
-            this.progressBar = progressBar;
         }
 
         @Override
         public void run() {
             try {
                 Robot robot = new Robot();
-                progressBar.setIndeterminate(false); // Disable indeterminate mode
-                progressBar.setMaximum(clickCount); // Set maximum value for progress bar
 
                 for (int i = 0; i < clickCount && isRunning; i++) {
-                    final int currentClick = i; // Capture the value of i in a final variable
                     robot.mouseMove(x, y);
                     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
                     Thread.sleep(clickInterval * 1000); // Click with specified interval
-
-                    // Update the progress bar after each click
-                    SwingUtilities.invokeLater(() -> progressBar.setValue(currentClick + 1));
                 }
             } catch (AWTException | InterruptedException ex) {
                 // Do nothing, just stop the clicking loop
