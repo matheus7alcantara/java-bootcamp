@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.InputEvent; // Add this import for InputEvent
 
 public class MouseClickerApp {
     private static boolean isRunning = false;
@@ -58,9 +59,14 @@ public class MouseClickerApp {
                     Thread clickerThread = new Thread(robotClicker);
                     clickerThread.start();
 
-                    clickerThread.interrupt(); // Stop clicking after 5 seconds
+                    try {
+                        Thread.sleep(5000); // Stop clicking after 5 seconds
+                    } catch (InterruptedException ex) {
+                        // Do nothing, just stop the clicking loop
+                    }
                     stopButton.setEnabled(false);
                     startButton.setEnabled(true);
+                    isRunning = false;
                 }
             }
         });
@@ -88,9 +94,7 @@ public class MouseClickerApp {
         public void run() {
             try {
                 Robot robot = new Robot();
-                long endTime = System.currentTimeMillis() + 5000;
-
-                while (System.currentTimeMillis() < endTime && isRunning) {
+                while (isRunning) {
                     robot.mouseMove(x, y);
                     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
