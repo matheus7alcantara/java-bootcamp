@@ -2,8 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class App {
-    public static void main(String[] args) throws Exception {
-        
+    public static void main(String[] args) {
         // Create the window
         JFrame frame = new JFrame("Login GUI");
         
@@ -18,18 +17,22 @@ public class App {
         JLabel passwordLabel = new JLabel("Password:");
         
         // Create text fields for login and password
-        JTextField loginField = new JTextField(15);
-        JPasswordField passwordField = new JPasswordField(15);
+        JTextField loginField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+        
+        // Set the dimensions of the fields in pixels
+        int fieldWidth = 270;
+        int fieldHeight = 30;
+        loginField.setPreferredSize(new Dimension(fieldWidth, fieldHeight));
+        passwordField.setPreferredSize(new Dimension(fieldWidth, fieldHeight));
         
         // Create a button for login
         JButton loginButton = new JButton("Login");
         
-        // Set the reduced heights for fields and button
-        int originalHeight = loginField.getPreferredSize().height;
-        int reducedHeight = (int) (originalHeight * 0.7);
-        loginField.setPreferredSize(new Dimension(loginField.getPreferredSize().width, reducedHeight));
-        passwordField.setPreferredSize(new Dimension(passwordField.getPreferredSize().width, reducedHeight));
-        loginButton.setPreferredSize(new Dimension(loginButton.getPreferredSize().width, reducedHeight));
+        // Set the dimensions of the button in pixels
+        int buttonWidth = 100;
+        int buttonHeight = 30;
+        loginButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         
         // Create a panel to organize components
         JPanel panel = new JPanel();
