@@ -4,34 +4,70 @@ import java.awt.*;
 public class App {
     public static void main(String[] args) throws Exception {
         
-        // Cria a janela
-        JFrame frame = new JFrame("Hello, World GUI");
+        // Create the window
+        JFrame frame = new JFrame("Login GUI");
         
-        // Define o tamanho da janela
-        frame.setSize(500, 200);
+        // Set the window size (50% wider)
+        frame.setSize(450, 200);
         
-        // Define o comportamento ao fechar a janela
+        // Set the close behavior of the window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        // Cria um rótulo com o texto "Hello, World!"
-        JLabel label = new JLabel("Hello, World!");
+        // Create labels for login and password
+        JLabel loginLabel = new JLabel("Login:");
+        JLabel passwordLabel = new JLabel("Password:");
         
-        // Define a fonte, tamanho e cor do texto
-        Font font = new Font("Georgia", Font.BOLD, 24); // Usando a fonte "Georgia"
-        label.setFont(font);
-        Color textColor = new Color(165, 60, 0); // RGB: 165, 60, 0
-        label.setForeground(textColor); // Define a cor do texto
+        // Create text fields for login and password
+        JTextField loginField = new JTextField(15);
+        JPasswordField passwordField = new JPasswordField(15);
         
-        // Define o alinhamento do texto para centralizar
-        label.setHorizontalAlignment(JLabel.CENTER);
+        // Create a button for login
+        JButton loginButton = new JButton("Login");
         
-        // Adiciona o rótulo à janela
-        frame.add(label);
+        // Set the reduced heights for fields and button
+        int originalHeight = loginField.getPreferredSize().height;
+        int reducedHeight = (int) (originalHeight * 0.7);
+        loginField.setPreferredSize(new Dimension(loginField.getPreferredSize().width, reducedHeight));
+        passwordField.setPreferredSize(new Dimension(passwordField.getPreferredSize().width, reducedHeight));
+        loginButton.setPreferredSize(new Dimension(loginButton.getPreferredSize().width, reducedHeight));
         
-        // Centraliza a janela na tela
+        // Create a panel to organize components
+        JPanel panel = new JPanel();
+        
+        // Set the layout for the panel
+        panel.setLayout(new GridBagLayout());
+        
+        // Create constraints to center elements vertically
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 10, 5, 10); // Add padding
+        
+        // Add components to the panel with constraints
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        panel.add(loginLabel, constraints);
+        
+        constraints.gridx = 1;
+        panel.add(loginField, constraints);
+        
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        panel.add(passwordLabel, constraints);
+        
+        constraints.gridx = 1;
+        panel.add(passwordField, constraints);
+        
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 2; // Span over two columns
+        panel.add(loginButton, constraints);
+        
+        // Add the panel to the window
+        frame.add(panel);
+        
+        // Center the window on the screen
         frame.setLocationRelativeTo(null);
         
-        // Torna a janela visível
+        // Make the window visible
         frame.setVisible(true);
     }
 }
