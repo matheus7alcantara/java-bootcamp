@@ -5,8 +5,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 
 public class MouseClickerApp {
-    private static boolean isRunning = false;
+    private static volatile boolean isRunning = false;
     private static int clickInterval = 1; // Default click interval in seconds
+
+    private static Thread clickerThread;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> createAndShowGUI());
@@ -17,7 +19,7 @@ public class MouseClickerApp {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 2, 10, 10));
+        panel.setLayout(new GridLayout(6, 2, 10, 10));
 
         JLabel xLabel = new JLabel("X Coordinate:");
         JTextField xTextField = new JTextField();
@@ -27,6 +29,9 @@ public class MouseClickerApp {
 
         JLabel intervalLabel = new JLabel("Click Interval (seconds):");
         JTextField intervalTextField = new JTextField(String.valueOf(clickInterval));
+
+        JLabel clickCountLabel = new JLabel("Number of Clicks:");
+        JTextField clickCountTextField = new JTextField();
 
         JButton startButton = new JButton("Start Clicking");
         JButton stopButton = new JButton("Stop Clicking");
@@ -38,6 +43,8 @@ public class MouseClickerApp {
         panel.add(yTextField);
         panel.add(intervalLabel);
         panel.add(intervalTextField);
+        panel.add(clickCountLabel);
+        panel.add(clickCountTextField);
         panel.add(startButton);
         panel.add(stopButton);
 
@@ -56,23 +63,16 @@ public class MouseClickerApp {
                     String xText = xTextField.getText();
                     String yText = yTextField.getText();
                     String intervalText = intervalTextField.getText();
+                    String clickCountText = clickCountTextField.getText();
 
                     int xCoord = Integer.parseInt(xText);
                     int yCoord = Integer.parseInt(yText);
                     clickInterval = Integer.parseInt(intervalText);
+                    int clickCount = Integer.parseInt(clickCountText);
 
-                    RobotClicker robotClicker = new RobotClicker(xCoord, yCoord);
-                    Thread clickerThread = new Thread(robotClicker);
+                    RobotClicker robotClicker = new RobotClicker(xCoord, yCoord, clickCount);
+                    clickerThread = new Thread(robotClicker);
                     clickerThread.start();
-
-                    try {
-                        Thread.sleep(5000); // Stop clicking after 5 seconds
-                    } catch (InterruptedException ex) {
-                        // Do nothing, just stop the clicking loop
-                    }
-                    stopButton.setEnabled(false);
-                    startButton.setEnabled(true);
-                    isRunning = false;
                 }
             }
         });
@@ -80,7 +80,14 @@ public class MouseClickerApp {
         stopButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                isRunning = false;
+                if (clickerThread != null) {
+                    isRunning = false; // Set flag to stop the click loop
+                    try {
+                        clickerThread.join(); // Wait for the clicker thread to complete
+                    } catch (InterruptedException ex) {
+                        // Do nothing
+                    }
+                }
                 stopButton.setEnabled(false);
                 startButton.setEnabled(true);
             }
@@ -90,17 +97,19 @@ public class MouseClickerApp {
     private static class RobotClicker implements Runnable {
         private int x;
         private int y;
+        private int clickCount;
 
-        public RobotClicker(int x, int y) {
+        public RobotClicker(int x, int y, int clickCount) {
             this.x = x;
             this.y = y;
+            this.clickCount = clickCount;
         }
 
         @Override
         public void run() {
             try {
                 Robot robot = new Robot();
-                while (isRunning) {
+                for (int i = 0; i < clickCount && isRunning; i++) {
                     robot.mouseMove(x, y);
                     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
