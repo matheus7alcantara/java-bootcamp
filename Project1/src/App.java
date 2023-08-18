@@ -8,7 +8,7 @@ public class App {
         JFrame frame = new JFrame("Hello, World GUI");
         
         // Define o tamanho da janela
-        frame.setSize(300, 200);
+        frame.setSize(500, 200);
         
         // Define o comportamento ao fechar a janela
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,9 +17,10 @@ public class App {
         JLabel label = new JLabel("Hello, World!");
         
         // Define a fonte, tamanho e cor do texto
-        Font font = new Font("Arial", Font.BOLD, 24);
+        Font font = new Font("Georgia", Font.BOLD, 24); // Usando a fonte "Georgia"
         label.setFont(font);
-        label.setForeground(Color.BLUE); // Define a cor do texto
+        Color textColor = new Color(165, 60, 0); // RGB: 165, 60, 0
+        label.setForeground(textColor); // Define a cor do texto
         
         // Define o alinhamento do texto para centralizar
         label.setHorizontalAlignment(JLabel.CENTER);
