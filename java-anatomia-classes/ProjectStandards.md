@@ -9,4 +9,8 @@ Variable naming rules:
 - Good practices: must begin with lower case letter  
 - Cannot contain blank spaces  
 - Java keywords must not be used  
-- The name must be unique within a scope  
+- The name must be unique within a scope 
+
+Methods naming: "ReturnType GoalNameOnInfinitive Arg(s)"
+- Methods can receive different arg types, and return another type
+- The name of the args exist only within that method's scope
